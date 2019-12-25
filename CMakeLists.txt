@@ -3,13 +3,25 @@ project(PoEDynLibrary)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(Base)
-include_directories(Control)
-include_directories(Dynamics)
-include_directories(Kinematics)
-include_directories(Model)
+add_subdirectory(Base)
+add_subdirectory(Control)
+add_subdirectory(Dynamics)
+add_subdirectory(Kinematics)
+add_subdirectory(Model)
+
+add_library(dynlib
+        ${PROJECT_SOURCE_DIR}/Base/LieOperator.cpp
+        ${PROJECT_SOURCE_DIR}/Control/Controller.cpp
+        ${PROJECT_SOURCE_DIR}/Control/Trajectory.cpp
+        ${PROJECT_SOURCE_DIR}/Dynamics/LieDynamics.cpp
+        ${PROJECT_SOURCE_DIR}/Kinematics/PoEKinematics.cpp
+        ${PROJECT_SOURCE_DIR}/Model/PropertyDefinition.cpp
+        ${PROJECT_SOURCE_DIR}/Model/SerialManipulator.cpp
+        )
 
 add_executable(${PROJECT_NAME} src/main.cpp)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC dynlib)
 
 find_package(Eigen3 3.0 REQUIRED NO_MODULES)
 target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
